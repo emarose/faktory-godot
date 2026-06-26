@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="MachineDefinition" format=3 uid="uid://gjuj7fw8aa5n"]
+
+[ext_resource type="Script" uid="uid://ryqtndjsdaeo" path="res://resources/definitions/MachineDefinition.gd" id="1_jpvra"]
+
+[resource]
+script = ExtResource("1_jpvra")
+id = "miner"
+name = "Miner"
+metadata/_custom_type_script = "uid://ryqtndjsdaeo"

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="NodeDefinition" format=3 uid="uid://cqbyq7die38v7"]
+
+[ext_resource type="Script" uid="uid://v7rcslgo7hej" path="res://resources/definitions/NodeDefinition.gd" id="1_5a8vm"]
+
+[resource]
+script = ExtResource("1_5a8vm")
+id = "copper_node"
+name = "Copper Node"
+metadata/_custom_type_script = "uid://v7rcslgo7hej"

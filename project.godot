@@ -11,8 +11,14 @@ config_version=5
 [application]
 
 config/name="Faktory"
+run/main_scene="uid://b6ynms48gu1ta"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
+
+[autoload]
+
+EventBus="*uid://dqrj6dctos5cx"
+DataManager="*uid://bqwibb8cme7a4"
 
 [display]
 

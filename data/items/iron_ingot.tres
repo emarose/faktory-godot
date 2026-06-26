@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ItemDefinition" format=3 uid="uid://cy8wbxlp78etf"]
+
+[ext_resource type="Script" uid="uid://osisa3esscn1" path="res://resources/definitions/ItemDefinition.gd" id="1_ku1y4"]
+
+[resource]
+script = ExtResource("1_ku1y4")
+id = "iron_ingot"
+name = "Iron Ingot"
+metadata/_custom_type_script = "uid://osisa3esscn1"

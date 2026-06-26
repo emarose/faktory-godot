@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ItemDefinition" format=3 uid="uid://w56tki270e0c"]
+
+[ext_resource type="Script" uid="uid://osisa3esscn1" path="res://resources/definitions/ItemDefinition.gd" id="1_jv3em"]
+
+[resource]
+script = ExtResource("1_jv3em")
+id = "copper_ore"
+name = "Copper Ore"
+metadata/_custom_type_script = "uid://osisa3esscn1"
