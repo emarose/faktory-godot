@@ -14,10 +14,59 @@ func _ready() -> void:
 	test_machine_integrity()
 	test_node_integrity()
 	test_milestone_integrity()
-
+	test_inventory_manager()
 	print("\n====================")
 	print("TESTS FINISHED")
 	print("====================")
+
+func assert_test(condition: bool, label: String) -> void:
+	if condition:
+		print("[PASS]", label)
+	else:
+		print("[FAIL]", label)
+
+func test_inventory_manager() -> void:
+	print("--- INVENTORY VALIDATION ---")
+
+	InventoryManager.clear_inventory()
+
+	InventoryManager.add_item("iron_ore", 10)
+
+	assert_test(
+		InventoryManager.get_amount("iron_ore") == 10,
+        "Add Item"
+	)
+
+	assert_test(
+		InventoryManager.has_item("iron_ore", 5),
+        "Has Item"
+	)
+
+	assert_test(
+		not InventoryManager.has_item("iron_ore", 20),
+        "Has Item Fails Correctly"
+	)
+
+	InventoryManager.remove_item("iron_ore", 5)
+
+	assert_test(
+		InventoryManager.get_amount("iron_ore") == 5,
+        "Remove Item"
+	)
+
+	var cost = { "iron_ore": 5 }
+
+	assert_test(
+		InventoryManager.has_items(cost),
+        "Has Cost"
+	)
+
+	InventoryManager.remove_cost(cost)
+
+	assert_test(
+		InventoryManager.get_amount("iron_ore") == 0,
+        "Remove Cost"
+	)
 
 func test_databases_loaded() -> void:
 	print("--- DATABASE COUNTS ---")
