@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MilestoneDefinition" format=3 uid="uid://byqafuogvye1k"]
+
+[ext_resource type="Script" uid="uid://c2owi1xstj3hs" path="res://resources/definitions/MilestoneDefinition.gd" id="1_lkgii"]
+
+[resource]
+script = ExtResource("1_lkgii")
+id = "tier 1"
+name = "first milestone"
+unlocks = Array[String](["smelter"])
+metadata/_custom_type_script = "uid://c2owi1xstj3hs"

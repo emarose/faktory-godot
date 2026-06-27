@@ -1,7 +1,7 @@
 extends Node
 
 # Señales públicas. Solo declarar señales, nada más.
-signal inventory_changed(item_id, new_amount)
+signal inventory_changed(inventory)
 signal resource_added(item_id, amount)
 signal resource_removed(item_id, amount)
 signal node_discovered(node_state_id)
