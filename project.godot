@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 EventBus="*uid://dqrj6dctos5cx"
 DataManager="*uid://bqwibb8cme7a4"
 InventoryManager="*uid://dangan5f5bil7"
+SaveManager="*uid://c6emrbl8givlq"
 
 [display]
 

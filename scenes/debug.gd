@@ -15,6 +15,7 @@ func _ready() -> void:
 	test_node_integrity()
 	test_milestone_integrity()
 	test_inventory_manager()
+	test_save_manager()
 	print("\n====================")
 	print("TESTS FINISHED")
 	print("====================")
@@ -67,6 +68,7 @@ func test_inventory_manager() -> void:
 		InventoryManager.get_amount("iron_ore") == 0,
         "Remove Cost"
 	)
+
 
 func test_databases_loaded() -> void:
 	print("--- DATABASE COUNTS ---")
@@ -192,6 +194,7 @@ func test_milestone_lookup() -> void:
 			print("OK: ", milestone.name)
 
 func test_milestone_integrity() -> void:
+
 	print("\n--- MILESTONE VALIDATION ---")
 
 	for milestone in DataManager.milestones_by_id.values():
@@ -199,3 +202,42 @@ func test_milestone_integrity() -> void:
 			push_error("Milestone missing id")
 		if milestone.name.is_empty():
 			push_error("Milestone missing name")
+
+func test_save_manager() -> void:
+
+	print("\n--- SAVE MANAGER ---")
+
+	InventoryManager.clear_inventory()
+
+	InventoryManager.add_item("iron_ore", 10)
+
+	var save_success = SaveManager.save_game()
+
+	assert_test(
+		save_success,
+		"Save Game"
+	)
+	InventoryManager.print_inventory()
+	InventoryManager.clear_inventory()
+	InventoryManager.print_inventory()
+	var load_success = SaveManager.load_game()
+	assert_test(SaveManager.save_exists(), "Save Exists After Save")
+	assert_test(
+			SaveManager.save_data.has("save_version"),
+			"Save Version Exists"
+		)
+	
+	assert_test(
+		load_success,
+		"Load Game"
+	)
+
+	assert_test(
+		InventoryManager.get_amount("iron_ore") == 10,
+		"Load Inventory"
+	)
+	
+	SaveManager.delete_save()
+	
+	assert_test(not SaveManager.save_exists(), "Save Deleted Correctly")
+	
