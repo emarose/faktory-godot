@@ -1,15 +1,22 @@
 extends Node
 
+# RESOURCES & INVENTORY
 signal inventory_changed(inventory)
 signal resource_added(item_id, amount)
 signal resource_removed(item_id, amount)
-signal node_discovered(node)
-signal node_depleted(node)
-signal machine_created(machine)
-signal machine_removed(machine)
-signal machine_recipe_assigned(machine,recipe_id)
-signal machine_processed(machine)
+signal node_discovered(node_id)
+signal node_depleted(node_id)
+# MACHINES
+signal machine_created(machine_id)
+signal machine_removed(machine_id)
+signal machine_recipe_assigned(machine_id,recipe_id)
+signal machine_processed(machine_id)
 signal recipe_completed(recipe_id)
-signal milestone_completed(milestone_id)
+# GAME DATA
 signal game_loaded()
 signal game_saved()
+#MILESTONES
+signal milestone_completed(milestone_id)
+signal recipe_unlocked(recipe_id)
+signal machine_unlocked(machine_id)
+signal node_unlocked(node_id)

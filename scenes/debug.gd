@@ -1,24 +1,27 @@
 extends Node
 
 func _ready() -> void:
-
+	#DATA LOADING
 	test_databases_loaded()
 	test_item_lookup()
 	test_recipe_lookup()
 	test_machine_lookup()
 	test_node_lookup()
 	test_milestone_lookup()
-
+	#DATA INTEGRITY
 	test_items_integrity()
 	test_recipe_integrity()
 	test_machine_integrity()
 	test_node_integrity()
 	test_milestone_integrity()
+	#GAME MANAGERS
 	test_inventory_manager()
 	test_save_manager()
 	test_map_manager()
 	test_production_manager()
 	test_machine_manager()
+	test_progression_manager()
+	
 	print("\n====================")
 	print("TESTS FINISHED")
 	print("====================")
@@ -322,3 +325,17 @@ func test_machine_manager() -> void:
 	MachineManager.load_save_data(save_data)
 
 	assert_test(MachineManager.machine_states.size() == 1,"Machine Save/Load")
+
+
+func test_progression_manager() -> void:
+	ProgressionManager.unlock_recipe("iron_ingot")
+	assert_test(ProgressionManager.is_recipe_unlocked("iron_ingot"),"Recipe Unlock")
+	
+	ProgressionManager.unlock_machine("smelter")
+	assert_test(ProgressionManager.is_machine_unlocked("smelter"),"Machine Unlock")
+	var save_data = (ProgressionManager.get_save_data())
+
+	ProgressionManager.initialize_progression()
+	ProgressionManager.load_save_data(save_data)
+
+	assert_test(ProgressionManager.is_recipe_unlocked("iron_ingot"),"Progression Save Load")

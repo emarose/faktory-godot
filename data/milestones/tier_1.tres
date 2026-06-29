@@ -6,5 +6,10 @@
 script = ExtResource("1_lkgii")
 id = "tier 1"
 name = "first milestone"
-unlocks = Array[String](["smelter"])
+description = "mine 5 iron ore to unlock smelter"
+requirements = {
+"iron_ore": 5
+}
+unlock_recipes = Array[String](["iron_ingot", ""])
+unlock_machines = Array[String](["smelter"])
 metadata/_custom_type_script = "uid://c2owi1xstj3hs"
