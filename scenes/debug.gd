@@ -16,6 +16,8 @@ func _ready() -> void:
 	test_milestone_integrity()
 	test_inventory_manager()
 	test_save_manager()
+	test_map_manager()
+	test_production_manager()
 	print("\n====================")
 	print("TESTS FINISHED")
 	print("====================")
@@ -240,4 +242,55 @@ func test_save_manager() -> void:
 	SaveManager.delete_save()
 	
 	assert_test(not SaveManager.save_exists(), "Save Deleted Correctly")
+
+func test_map_manager() -> void:
+	print("MAP MANAGER")
+	MapManager.generate_world(12345)
+
+	assert_test(
+		MapManager.node_states.size() == 20,
+		"Generated 20 Nodes"
+	)
 	
+	var node = MapManager.node_states[0]
+
+	var original = node.current_amount
+
+	MapManager.mine_node(node, 10)
+
+	assert_test(
+		node.current_amount == original - 10,
+		"Mining Reduces Node Amount"
+	)
+	assert_test(
+	InventoryManager.get_amount("iron_ore") > 0,
+	"Mining Adds Resources"
+	)
+	var save_data = MapManager.get_save_data()
+
+	MapManager.load_save_data(save_data)
+
+	assert_test(
+		MapManager.node_states.size() == 20,
+		"Node Save/Load Works"
+	)
+
+func test_production_manager() -> void:
+	InventoryManager.clear_inventory()
+	print("OUTPUT DEBUG")
+	InventoryManager.add_item("iron_ore",10)
+	
+	assert_test(ProductionManager.can_craft("iron_ingot"),
+	"Can Craft Iron Ingot"
+	)
+	
+	ProductionManager.craft_recipe("iron_ingot")
+	
+	assert_test(InventoryManager.get_amount("iron_ore") == 8,"Inputs Consumed")
+	InventoryManager.print_inventory()
+	assert_test(InventoryManager.get_amount("iron_ingot") == 1,"Outputs Granted")
+	
+	InventoryManager.clear_inventory()
+	
+	assert_test(not ProductionManager.can_craft("iron_ingot"),
+	"Cannot Craft Without Resources")

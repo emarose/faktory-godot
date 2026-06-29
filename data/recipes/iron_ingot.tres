@@ -4,11 +4,14 @@
 
 [resource]
 script = ExtResource("1_mi06s")
-id = "iron_ingot_recipe"
+id = "iron_ingot"
 name = "Iron Ingot"
 machine_id = "smelter"
 inputs = {
 "iron_ore": 2
+}
+outputs = {
+"iron_ingot": 1
 }
 processing_time = 0.3
 metadata/_custom_type_script = "uid://dalp8p7nqfta6"
