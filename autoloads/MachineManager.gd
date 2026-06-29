@@ -6,14 +6,19 @@ extends Node
 
 var machine_states: Array[MachineState] = []
 
+func _process(delta: float) -> void:
+
+	for machine in machine_states:
+
+		update_machine(
+			machine,
+			delta
+		)
 # =====================================================
 # MACHINE CREATION
 # =====================================================
 
-func create_machine(
-	machine_definition_id: String,
-	position: Vector2i = Vector2i.ZERO
-) -> MachineState:
+func create_machine(machine_definition_id: String, position: Vector2i = Vector2i.ZERO) -> MachineState:
 
 	var definition = DataManager.get_machine(
 		machine_definition_id
@@ -44,14 +49,11 @@ func create_machine(
 
 	return machine
 
-
 # =====================================================
 # REMOVAL
 # =====================================================
 
-func remove_machine(
-	machine: MachineState
-) -> bool:
+func remove_machine(machine: MachineState) -> bool:
 
 	if machine == null:
 		return false
@@ -69,14 +71,11 @@ func remove_machine(
 
 	return true
 
-
 # =====================================================
 # LOOKUPS
 # =====================================================
 
-func get_machine_definition(
-	machine: MachineState
-):
+func get_machine_definition(machine: MachineState):
 
 	if machine == null:
 		return null
@@ -85,10 +84,7 @@ func get_machine_definition(
 		machine.machine_definition_id
 	)
 
-
-func get_machine_at_position(
-	pos: Vector2i
-) -> MachineState:
+func get_machine_at_position(pos: Vector2i) -> MachineState:
 
 	for machine in machine_states:
 
@@ -97,15 +93,11 @@ func get_machine_at_position(
 
 	return null
 
-
 # =====================================================
 # RECIPE ASSIGNMENT
 # =====================================================
 
-func assign_recipe(
-	machine: MachineState,
-	recipe_id: String
-) -> bool:
+func assign_recipe(machine: MachineState,recipe_id: String) -> bool:
 
 	if machine == null:
 		return false
@@ -151,14 +143,11 @@ func assign_recipe(
 
 	return true
 
-
 # =====================================================
 # PROCESSING
 # =====================================================
 
-func process_machine(
-	machine: MachineState
-) -> bool:
+func process_machine(machine: MachineState) -> bool:
 
 	if machine == null:
 		return false
@@ -182,6 +171,77 @@ func process_machine(
 
 	return success
 
+func start_machine(machine: MachineState) -> bool:
+
+	if machine == null:
+		return false
+
+	if machine.is_running:
+		return false
+
+	if machine.selected_recipe_id.is_empty():
+		return false
+
+	if not ProductionManager.consume_recipe_inputs(
+		machine.selected_recipe_id
+	):
+		return false
+
+	machine.progress = 0.0
+
+	machine.target_time = (
+		ProductionManager.get_processing_time(
+			machine.selected_recipe_id
+		)
+	)
+
+	machine.is_running = true
+
+	if EventBus:
+		EventBus.emit_signal(
+			"machine_started",
+			machine
+		)
+
+	return true
+
+func update_machine(machine: MachineState,delta: float) -> void:
+
+	if machine == null:
+		return
+
+	if not machine.is_running:
+		return
+
+	machine.progress += delta
+
+	if machine.progress >= machine.target_time:
+
+		finish_machine(machine)
+
+func finish_machine(machine: MachineState) -> void:
+
+	if machine == null:
+		return
+
+	if machine.selected_recipe_id.is_empty():
+		return
+
+	ProductionManager.grant_recipe_outputs(
+		machine.selected_recipe_id
+	)
+
+	machine.is_running = false
+
+	machine.progress = 0.0
+
+	machine.target_time = 0.0
+
+	if EventBus:
+		EventBus.emit_signal(
+			"machine_completed",
+			machine
+		)
 
 # =====================================================
 # SAVE SUPPORT
@@ -218,10 +278,7 @@ func get_save_data() -> Array:
 
 	return save_data
 
-
-func load_save_data(
-	data: Array
-) -> void:
+func load_save_data(data: Array) -> void:
 
 	machine_states.clear()
 
@@ -233,7 +290,8 @@ func load_save_data(
 				"machine_definition_id",
 				""
 			)
-
+		machine.target_time = machine_data.get( "target_time", 0.0
+			)
 		machine.position = Vector2i(
 			machine_data.get(
 				"position_x",
@@ -269,6 +327,22 @@ func load_save_data(
 			machine
 		)
 
+
+# =====================================================
+# HELPERS
+# =====================================================
+
+func get_machine_count(machine_id: String) -> int:
+
+	var count := 0
+
+	for machine in machine_states:
+
+		if machine.machine_definition_id == machine_id:
+			count += 1
+
+	return count
+
 # =====================================================
 # DEBUG
 # =====================================================
@@ -291,10 +365,3 @@ func print_machines() -> void:
 		)
 
 	print("====================\n")
-
-''' NOTE: not implemented YET: 
-processing_time
-timers
-automation loops
-fuel consumption
-tick systems '''

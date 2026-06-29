@@ -309,23 +309,40 @@ func test_production_manager() -> void:
 	"Cannot Craft Without Resources")
 
 func test_machine_manager() -> void:
-	var machine = MachineManager.create_machine("smelter")
-	
-	assert_test(machine != null,"Machine Created")
-	
-	assert_test(MachineManager.assign_recipe(machine,"iron_ingot"),"Recipe Assigned")
-
 	InventoryManager.clear_inventory()
-	InventoryManager.add_item("iron_ore",10)
 
-	assert_test(MachineManager.process_machine(machine),"Machine Processed Recipe")
-	assert_test(InventoryManager.get_amount("iron_ingot") == 1,"Machine Produced Output")
+	InventoryManager.add_item(
+		"iron_ore",
+		10
+	)
+	
+	var machine = MachineManager.create_machine("smelter")
+
+	MachineManager.assign_recipe(machine, "iron_ingot")
+	
+	assert_test(MachineManager.start_machine(machine),"Machine Started")
+	
+	MachineManager.update_machine(machine,100.0)
+	
+	assert_test(InventoryManager.get_amount("iron_ingot") == 1,"Machine Completed Output")
+	assert_test(not machine.is_running, "Machine Stopped After Completion")
+	
 	var save_data = MachineManager.get_save_data()
-
 	MachineManager.load_save_data(save_data)
-
 	assert_test(MachineManager.machine_states.size() == 1,"Machine Save/Load")
 
+	#V1 tests:
+	#var machine = MachineManager.create_machine("smelter")
+	#
+	#assert_test(machine != null,"Machine Created")
+	#
+	#assert_test(MachineManager.assign_recipe(machine,"iron_ingot"),"Recipe Assigned")
+#
+	#InventoryManager.clear_inventory()
+	#InventoryManager.add_item("iron_ore",10)
+#
+	#assert_test(MachineManager.process_machine(machine),"Machine Processed Recipe")
+	#assert_test(InventoryManager.get_amount("iron_ingot") == 1,"Machine Produced Output")
 
 func test_progression_manager() -> void:
 	ProgressionManager.unlock_recipe("iron_ingot")

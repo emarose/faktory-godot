@@ -230,27 +230,53 @@ func load_save_data(
 	data: Dictionary
 ) -> void:
 
-	completed_milestones = data.get(
-		"completed_milestones",
-		[]
+	completed_milestones = _to_string_array(
+		data.get(
+			"completed_milestones",
+			[]
+		)
 	)
 
-	unlocked_recipes = data.get(
-		"unlocked_recipes",
-		[]
+	unlocked_recipes = _to_string_array(
+		data.get(
+			"unlocked_recipes",
+			[]
+		)
 	)
 
-	unlocked_machines = data.get(
-		"unlocked_machines",
-		[]
+	unlocked_machines = _to_string_array(
+		data.get(
+			"unlocked_machines",
+			[]
+		)
 	)
 
-	unlocked_nodes = data.get(
-		"unlocked_nodes",
-		[]
+	unlocked_nodes = _to_string_array(
+		data.get(
+			"unlocked_nodes",
+			[]
+		)
 	)
 
+# =====================================================
+# HELPERS
+# =====================================================
 
+func _to_string_array(
+	value: Variant
+) -> Array[String]:
+
+	var result: Array[String] = []
+
+	if not value is Array:
+		return result
+
+	for item in value:
+		result.append(
+			str(item)
+		)
+
+	return result
 # =====================================================
 # DEBUG
 # =====================================================

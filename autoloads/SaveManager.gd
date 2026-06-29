@@ -1,14 +1,18 @@
 extends Node
 
 const SAVE_PATH := "user://savegame.json"
+const SAVE_VERSION := 1
 
 var save_data := {}
 
 func save_game() -> bool:
 
 	save_data = {
-		"save_version": 1,
-		"inventory": InventoryManager.get_save_data()
+		"save_version": SAVE_VERSION,
+		"inventory": InventoryManager.get_save_data(),
+		#"world": WorldManager.get_save_data(), NOT IMPLEMENTED YET
+		"machines": MachineManager.get_save_data(),
+		"progression": ProgressionManager.get_save_data()
 	}
 
 	var file = FileAccess.open(
@@ -59,11 +63,12 @@ func load_game() -> bool:
 
 	var data = json.data
 
-	InventoryManager.load_save_data(
-		data.get("inventory", {})
-	)
+	InventoryManager.load_save_data(data.get("inventory", {}))
+	#WorldManager.load_save_data(data.get("world", {})) NOT IMPLEMENTED YET
+	MachineManager.load_save_data(data.get("machines", []))
+	ProgressionManager.load_save_data(data.get("progression", {}))
 
-	print("Game Loaded")
+	print("Game Loaded from:", SAVE_PATH)
 
 	return true
 
