@@ -24,8 +24,8 @@ func generate_world(seed_value: int = -1) -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = world_seed
 
-	print("Generating world with seed: ", world_seed)
-
+	print("Generating world with seed: FOR TESTING PURPOSES ONLY: ", world_seed)
+	print("_generate_test_nodes(rng) must be replaced with the real node generation logic.")
 	_generate_test_nodes(rng)
 
 # =====================================================
@@ -41,7 +41,7 @@ func _generate_test_nodes(rng: RandomNumberGenerator) -> void:
 		return
 
 	for i in range(20):
-
+		# this available_nodes.pick_random() should be replaced to use spawn_weight and ratio values from the node definitions, but for now this is fine for testing purposes
 		var node_id = available_nodes.pick_random()
 
 		var definition = DataManager.get_resource_node(node_id)

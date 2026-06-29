@@ -18,6 +18,7 @@ func _ready() -> void:
 	test_save_manager()
 	test_map_manager()
 	test_production_manager()
+	test_machine_manager()
 	print("\n====================")
 	print("TESTS FINISHED")
 	print("====================")
@@ -247,11 +248,20 @@ func test_map_manager() -> void:
 	print("MAP MANAGER")
 	MapManager.generate_world(12345)
 
+	var first = MapManager.node_states[0].position
+
+	MapManager.generate_world(12345)
+
+	var second = MapManager.node_states[0].position
+
+	assert_test(
+		first == second,
+		"World Seed Deterministic"
+	)
 	assert_test(
 		MapManager.node_states.size() == 20,
 		"Generated 20 Nodes"
 	)
-	
 	var node = MapManager.node_states[0]
 
 	var original = node.current_amount
@@ -294,3 +304,21 @@ func test_production_manager() -> void:
 	
 	assert_test(not ProductionManager.can_craft("iron_ingot"),
 	"Cannot Craft Without Resources")
+
+func test_machine_manager() -> void:
+	var machine = MachineManager.create_machine("smelter")
+	
+	assert_test(machine != null,"Machine Created")
+	
+	assert_test(MachineManager.assign_recipe(machine,"iron_ingot"),"Recipe Assigned")
+
+	InventoryManager.clear_inventory()
+	InventoryManager.add_item("iron_ore",10)
+
+	assert_test(MachineManager.process_machine(machine),"Machine Processed Recipe")
+	assert_test(InventoryManager.get_amount("iron_ingot") == 1,"Machine Produced Output")
+	var save_data = MachineManager.get_save_data()
+
+	MachineManager.load_save_data(save_data)
+
+	assert_test(MachineManager.machine_states.size() == 1,"Machine Save/Load")

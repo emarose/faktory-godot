@@ -6,4 +6,5 @@
 script = ExtResource("1_8qqi1")
 id = "smelter"
 name = "Smelter"
+allowed_recipes = Array[String](["iron_ingot"])
 metadata/_custom_type_script = "uid://ryqtndjsdaeo"
