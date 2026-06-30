@@ -369,40 +369,91 @@ func test_production_manager() -> void:
 	"Cannot Craft Without Resources")
 
 func test_machine_manager() -> void:
+	print("\n--- MACHINE MANAGER ---")
+
+	MachineManager.machine_states.clear()
 	InventoryManager.clear_inventory()
 
 	InventoryManager.add_item(
 		"iron_ore",
 		10
 	)
-	
+
 	var machine = MachineManager.create_machine("smelter")
 
-	MachineManager.assign_recipe(machine, "iron_ingot")
-	
-	assert_test(MachineManager.start_machine(machine),"Machine Started")
-	
-	MachineManager.update_machine(machine,100.0)
-	
-	assert_test(InventoryManager.get_amount("iron_ingot") == 1,"Machine Completed Output")
-	assert_test(not machine.is_running, "Machine Stopped After Completion")
-	
-	var save_data = MachineManager.get_save_data()
-	MachineManager.load_save_data(save_data)
-	assert_test(MachineManager.machine_states.size() == 1,"Machine Save/Load")
+	assert_test(
+		machine != null,
+		"Machine Created"
+	)
 
-	#V1 tests:
-	#var machine = MachineManager.create_machine("smelter")
-	#
-	#assert_test(machine != null,"Machine Created")
-	#
-	#assert_test(MachineManager.assign_recipe(machine,"iron_ingot"),"Recipe Assigned")
-#
-	#InventoryManager.clear_inventory()
-	#InventoryManager.add_item("iron_ore",10)
-#
-	#assert_test(MachineManager.process_machine(machine),"Machine Processed Recipe")
-	#assert_test(InventoryManager.get_amount("iron_ingot") == 1,"Machine Produced Output")
+	assert_test(
+		MachineManager.assign_recipe(machine, "iron_ingot"),
+		"Recipe Assigned"
+	)
+
+	assert_test(
+		MachineManager.start_machine(machine),
+		"Machine Started"
+	)
+
+	MachineManager.update_machine(
+		machine,
+		100.0
+	)
+
+	assert_test(
+		InventoryManager.get_amount("iron_ingot") == 1,
+		"Machine Completed First Output"
+	)
+
+	assert_test(
+		machine.is_running,
+		"Machine Auto Restarted"
+	)
+
+	var safety := 20
+
+	while machine.is_running and safety > 0:
+		MachineManager.update_machine(
+			machine,
+			100.0
+		)
+
+		safety -= 1
+
+	assert_test(
+		safety > 0,
+		"Machine Auto Processing Finished Safely"
+	)
+
+	assert_test(
+		InventoryManager.get_amount("iron_ore") == 0,
+		"Consumed All Ore"
+	)
+
+	assert_test(
+		InventoryManager.get_amount("iron_ingot") == 5,
+		"Produced All Ingots"
+	)
+
+	assert_test(
+		not machine.is_running,
+		"Stopped When Inputs Exhausted"
+	)
+
+	var save_data = MachineManager.get_save_data()
+
+	MachineManager.load_save_data(save_data)
+
+	assert_test(
+		MachineManager.machine_states.size() == 1,
+		"Machine Save/Load"
+	)
+
+	assert_test(
+		MachineManager.machine_states[0].auto_restart,
+		"Machine Auto Restart Save/Load"
+	)
 
 func test_progression_manager() -> void:
 	ProgressionManager.unlock_recipe("iron_ingot")

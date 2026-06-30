@@ -14,6 +14,7 @@ signal recipe_completed(recipe_id)
 signal machine_processed(machine_id)
 signal machine_started(machine_id)
 signal machine_completed(machine_id)
+signal machine_auto_restarted(machine_id)
 # GAME DATA
 signal game_loaded()
 signal game_saved()

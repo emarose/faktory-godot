@@ -8,6 +8,7 @@ class_name MachineState
 @export var progress: float = 0.0
 @export var target_time: float = 0.0
 @export var fuel: float = 0.0
+@export var auto_restart: bool = true
 
 func reset_progress() -> void:
 	progress = 0.0

@@ -227,9 +227,7 @@ func finish_machine(machine: MachineState) -> void:
 	if machine.selected_recipe_id.is_empty():
 		return
 
-	ProductionManager.grant_recipe_outputs(
-		machine.selected_recipe_id
-	)
+	ProductionManager.grant_recipe_outputs(machine.selected_recipe_id)
 
 	machine.is_running = false
 
@@ -243,6 +241,31 @@ func finish_machine(machine: MachineState) -> void:
 			machine
 		)
 
+	_attempt_auto_restart(machine)
+
+func _attempt_auto_restart(machine: MachineState) -> void:
+	if machine == null:
+		return
+
+	if not machine.auto_restart:
+		return
+
+	if machine.selected_recipe_id.is_empty():
+		return
+
+	if not ProductionManager.can_craft(
+		machine.selected_recipe_id
+	):
+		return
+
+	if not start_machine(machine):
+		return
+
+	if EventBus:
+		EventBus.emit_signal(
+			"machine_auto_restarted",
+			machine
+		)
 # =====================================================
 # SAVE SUPPORT
 # =====================================================
@@ -273,7 +296,13 @@ func get_save_data() -> Array:
 				machine.progress,
 
 			"fuel":
-				machine.fuel
+				machine.fuel,
+
+			"auto_restart":
+				machine.auto_restart,
+			
+			"target_time":
+				machine.target_time,
 		})
 
 	return save_data
@@ -325,6 +354,10 @@ func load_save_data(data: Array) -> void:
 
 		machine_states.append(
 			machine
+		)
+		machine.auto_restart = machine_data.get(
+			"auto_restart",
+			true
 		)
 
 
