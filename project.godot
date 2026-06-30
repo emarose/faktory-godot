@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Faktory"
-run/main_scene="uid://b6ynms48gu1ta"
+run/main_scene="uid://swon5q5uxbgm"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 
@@ -25,6 +25,7 @@ MapManager="*uid://pemjcrqx0qyk"
 ProductionManager="*uid://kuu7ex77xjs0"
 MachineManager="*uid://3e43y5nr3uqt"
 ProgressionManager="*uid://1ly22l1rxmb3"
+PlayerManager="*uid://bq6pasqpgfwom"
 
 [display]
 

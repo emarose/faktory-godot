@@ -2,7 +2,7 @@ extends Resource
 class_name PlayerState
 
 @export var position: Vector2i = Vector2i.ZERO
-@export var discovery_radius: int = 5
+@export var discovery_radius: int = 16
 @export var movement_speed: float = 100.0
 
 func move_to(new_position: Vector2i) -> void:

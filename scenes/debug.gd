@@ -14,6 +14,9 @@ func _ready() -> void:
 	test_machine_integrity()
 	test_node_integrity()
 	test_milestone_integrity()
+	#WORLD GENERATION
+	test_weighted_generation_sanity()
+	test_mine_exhaustion()
 	#GAME MANAGERS
 	test_inventory_manager()
 	test_save_manager()
@@ -21,9 +24,8 @@ func _ready() -> void:
 	test_production_manager()
 	test_machine_manager()
 	test_progression_manager()
-	#WORLD GENERATION
-	test_weighted_generation_sanity()
-	test_mine_exhaustion()
+	test_player_manager()
+
 	print("\n====================")
 	print("TESTS FINISHED")
 	print("====================")
@@ -544,6 +546,63 @@ func test_mine_exhaustion() -> void:
 		"Exhausted Mine Stays At Zero"
 	)
 
+func test_player_manager() -> void:
+	print("\n--- PLAYER MANAGER ---")
+
+	PlayerManager.initialize_player()
+
+	assert_test(
+		PlayerManager.get_position() == Vector2i.ZERO,
+		"Player Initialized"
+	)
+
+	assert_test(
+		PlayerManager.player_state.discovery_radius == 5,
+		"Player Discovery Radius Initialized"
+	)
+
+	PlayerManager.set_position(Vector2i(10, 20))
+
+	assert_test(
+		PlayerManager.get_position() == Vector2i(10, 20),
+		"Player Position Updated"
+	)
+
+	PlayerManager.player_state.discovery_radius = 8
+
+	var save_success := SaveManager.save_game()
+
+	assert_test(
+		save_success,
+		"Player Save Created"
+	)
+
+	PlayerManager.initialize_player()
+
+	assert_test(
+		PlayerManager.get_position() == Vector2i.ZERO,
+		"Player Reset Before Load"
+	)
+
+	var load_success := SaveManager.load_game()
+
+	assert_test(
+		load_success,
+		"Player Save Loaded"
+	)
+
+	assert_test(
+		PlayerManager.get_position() == Vector2i(10, 20),
+		"Player Position Persisted"
+	)
+
+	assert_test(
+		PlayerManager.player_state.discovery_radius == 8,
+		"Player Discovery Radius Persisted"
+	)
+
+	SaveManager.delete_save()
+	
 # HELPERS
 func _get_node_snapshot(nodes: Array[NodeState]) -> Array:
 	var snapshot := []

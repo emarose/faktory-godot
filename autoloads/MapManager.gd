@@ -155,13 +155,21 @@ func discover_nodes_near_position(
 ) -> void:
 
 	for node in node_states:
+		
+		var distance = position.distance_to(node.position)
+		print(
+			"Node:",node.node_definition_id,
+			node.position,
+			" Distance:",
+			distance
+		)
 
 		if node.discovered:
 			continue
 
 		if node.position.distance_to(position) > radius:
 			continue
-
+		
 		_discover_node_state(node)
 
 

@@ -23,3 +23,5 @@ signal milestone_completed(milestone_id)
 signal recipe_unlocked(recipe_id)
 signal machine_unlocked(machine_id)
 signal node_unlocked(node_id)
+#PLAYER
+signal player_moved(position)

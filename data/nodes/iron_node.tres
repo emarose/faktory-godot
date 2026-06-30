@@ -6,7 +6,7 @@
 script = ExtResource("1_ap2gt")
 id = "iron_node"
 name = "Iron Node"
-spawn_weight = 10
+spawn_weight = 8
 output = {
 "iron_ore": 1
 }
