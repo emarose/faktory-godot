@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bjh3dn60tuevx"]
+
+[ext_resource type="Script" uid="uid://dla7u6uiemocg" path="res://scenes/markers/node_marker.gd" id="1_1p5id"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_xnbm3"]
+size = Vector2(10, 10)
+
+[node name="NodeMarker" type="Node2D" unique_id=1090869655]
+script = ExtResource("1_1p5id")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=683492133]
+texture = SubResource("PlaceholderTexture2D_xnbm3")
+
+[node name="Label" type="Label" parent="." unique_id=693013239]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "NODO"

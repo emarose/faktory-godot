@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://c4f2u1pok77sp"]
+
+[ext_resource type="Script" uid="uid://dssp2gxukmyqe" path="res://scenes/markers/player_marker.gd" id="1_rosqa"]
+[ext_resource type="Texture2D" uid="uid://bs6ev77g8n0h2" path="res://icon.svg" id="2_y3vo5"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_g4v7s"]
+radius = 12.0
+
+[node name="PlayerMarker" type="CharacterBody2D" unique_id=33540728]
+script = ExtResource("1_rosqa")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=906367481]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_y3vo5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1866385726]
+shape = SubResource("CircleShape2D_g4v7s")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=299935329]

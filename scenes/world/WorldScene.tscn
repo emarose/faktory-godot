@@ -1,18 +1,15 @@
 [gd_scene format=3 uid="uid://swon5q5uxbgm"]
 
 [ext_resource type="Script" uid="uid://brovvhvvt87c2" path="res://scenes/world/world_scene.gd" id="1_hi5kv"]
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_xnbm3"]
-size = Vector2(50, 50)
+[ext_resource type="PackedScene" uid="uid://c4f2u1pok77sp" path="res://scenes/markers/PlayerMarker.tscn" id="2_s4elt"]
+[ext_resource type="Script" uid="uid://dqxccxs7sye43" path="res://scenes/world/world_renderer.gd" id="2_xnbm3"]
 
 [node name="MapWorld" type="Node2D" unique_id=1146976223]
 script = ExtResource("1_hi5kv")
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=327673925]
+[node name="PlayerMarker" parent="." unique_id=362269943 instance=ExtResource("2_s4elt")]
 
-[node name="NodeContainer" type="Node2D" parent="." unique_id=2140992150]
-
-[node name="PlayerMarker" type="Sprite2D" parent="." unique_id=1599970007]
-texture = SubResource("PlaceholderTexture2D_xnbm3")
+[node name="WorldRenderer" type="Node2D" parent="." unique_id=2140992150]
+script = ExtResource("2_xnbm3")
 
 [node name="DebugUI" type="CanvasLayer" parent="." unique_id=492586324]
