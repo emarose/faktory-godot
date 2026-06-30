@@ -59,7 +59,7 @@ func _generate_test_nodes(rng: RandomNumberGenerator) -> void:
 		node_states.append(node)
 
 	print("Generated nodes: ", node_states.size())
-
+#IMPORTANT FOR THE FUTURE: world generation settings should live in a resource/data definition, not inside MapManager.
 func _generate_nodes(rng: RandomNumberGenerator) -> void:
 	if DataManager.nodes_by_id.is_empty():
 		push_error("MapManager: No NodeDefinitions found.")
@@ -69,7 +69,10 @@ func _generate_nodes(rng: RandomNumberGenerator) -> void:
 		var node_id := weighted_random_node(rng)
 
 		if node_id.is_empty():
-			return
+			push_error(
+				"MapManager: weighted_random_node returned empty id."
+			)
+			continue
 
 		var definition = DataManager.get_resource_node(node_id)
 

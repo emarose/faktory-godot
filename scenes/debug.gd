@@ -21,7 +21,9 @@ func _ready() -> void:
 	test_production_manager()
 	test_machine_manager()
 	test_progression_manager()
-	
+	#WORLD GENERATION
+	test_weighted_generation_sanity()
+	test_mine_exhaustion()
 	print("\n====================")
 	print("TESTS FINISHED")
 	print("====================")
@@ -414,6 +416,82 @@ func test_progression_manager() -> void:
 	ProgressionManager.load_save_data(save_data)
 
 	assert_test(ProgressionManager.is_recipe_unlocked("iron_ingot"),"Progression Save Load")
+
+func test_weighted_generation_sanity() -> void:
+	print("\n--- WEIGHTED GENERATION SANITY ---")
+
+	var iron_definition = DataManager.get_resource_node("iron_node")
+	var copper_definition = DataManager.get_resource_node("copper_node")
+
+	if iron_definition == null or copper_definition == null:
+		assert_test(false, "Weighted Generation Requires Iron And Copper Nodes")
+		return
+
+	if iron_definition.spawn_weight <= copper_definition.spawn_weight:
+		print("Skipping weighted sanity check: iron_node weight is not larger than copper_node weight.")
+		return
+
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 12345
+
+	var iron_count := 0
+	var copper_count := 0
+
+	for i in range(1000):
+		var node_id := MapManager.weighted_random_node(rng)
+
+		if node_id == "iron_node":
+			iron_count += 1
+
+		if node_id == "copper_node":
+			copper_count += 1
+
+	print("iron_node: ", iron_count)
+	print("copper_node: ", copper_count)
+
+	assert_test(
+		iron_count > copper_count,
+		"Weighted Generation Prefers Larger Weight"
+	)
+
+func test_mine_exhaustion() -> void:
+	print("\n--- MINE EXHAUSTION ---")
+
+	MapManager.generate_world(12345)
+
+	if MapManager.node_states.is_empty():
+		assert_test(false, "Mine Exhaustion Requires Generated Nodes")
+		return
+
+	var node = MapManager.node_states[0]
+
+	InventoryManager.clear_inventory()
+
+	node.current_amount = 1
+
+	var first_mine := MapManager.mine_node(node, 10)
+
+	assert_test(
+		first_mine,
+		"Mine Final Node Amount Succeeds"
+	)
+
+	assert_test(
+		node.current_amount == 0,
+		"Mine Exhaustion Reaches Zero"
+	)
+
+	var second_mine := MapManager.mine_node(node, 10)
+
+	assert_test(
+		not second_mine,
+		"Mine Exhausted Node Fails"
+	)
+
+	assert_test(
+		node.current_amount == 0,
+		"Exhausted Mine Stays At Zero"
+	)
 
 # HELPERS
 func _get_node_snapshot(nodes: Array[NodeState]) -> Array:

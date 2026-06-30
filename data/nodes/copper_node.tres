@@ -6,7 +6,6 @@
 script = ExtResource("1_5a8vm")
 id = "copper_node"
 name = "Copper Node"
-spawn_weight = 5
 output = {
 "copper_ore": 1
 }
