@@ -6,4 +6,8 @@
 script = ExtResource("1_ap2gt")
 id = "iron_node"
 name = "Iron Node"
+spawn_weight = 10
+output = {
+"iron_ore": 1
+}
 metadata/_custom_type_script = "uid://v7rcslgo7hej"

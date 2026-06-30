@@ -177,8 +177,9 @@ func test_machine_integrity() -> void:
 func test_node_integrity() -> void:
 
 	print("\n--- NODE VALIDATION ---")
-
 	for node in DataManager.nodes_by_id.values():
+		
+		assert_test(not node.output.is_empty(), "Node '%s' Has Output" % node.id)
 
 		for output_id in node.output.keys():
 
@@ -249,36 +250,52 @@ func test_save_manager() -> void:
 
 func test_map_manager() -> void:
 	print("MAP MANAGER")
-	MapManager.generate_world(12345)
-
-	var first = MapManager.node_states[0].position
 
 	MapManager.generate_world(12345)
+	var first_snapshot := _get_node_snapshot(MapManager.node_states)
 
-	var second = MapManager.node_states[0].position
+	MapManager.generate_world(12345)
+	var second_snapshot := _get_node_snapshot(MapManager.node_states)
 
 	assert_test(
-		first == second,
-		"World Seed Deterministic"
+		first_snapshot == second_snapshot,
+		"World Seed Deterministic: Positions, Types, Capacities"
 	)
+
 	assert_test(
 		MapManager.node_states.size() == 20,
 		"Generated 20 Nodes"
 	)
-	var node = MapManager.node_states[0]
 
+	var node = MapManager.node_states[0]
+	var definition = MapManager.get_node_definition(node)
 	var original = node.current_amount
 
-	MapManager.mine_node(node, 10)
+	InventoryManager.clear_inventory()
 
+	var mined_successfully = MapManager.mine_node(node, 10)
+
+	assert_test(
+		mined_successfully,
+		"Mining Node Succeeds"
+	)
+	
 	assert_test(
 		node.current_amount == original - 10,
 		"Mining Reduces Node Amount"
 	)
+
+	var mining_added_resources := false
+	
+	for item_id in definition.output.keys():
+		if InventoryManager.get_amount(item_id) > 0:
+			mining_added_resources = true
+
 	assert_test(
-	InventoryManager.get_amount("iron_ore") > 0,
-	"Mining Adds Resources"
+		mining_added_resources,
+		"Mining Adds Node Output Resources"
 	)
+
 	var save_data = MapManager.get_save_data()
 
 	MapManager.load_save_data(save_data)
@@ -287,6 +304,47 @@ func test_map_manager() -> void:
 		MapManager.node_states.size() == 20,
 		"Node Save/Load Works"
 	)
+
+#func test_map_manager() -> void:
+	#print("MAP MANAGER")
+	#MapManager.generate_world(12345)
+#
+	#var first = MapManager.node_states[0].position
+#
+	#MapManager.generate_world(12345)
+#
+	#var second = MapManager.node_states[0].position
+#
+	#assert_test(
+		#first == second,
+		#"World Seed Deterministic"
+	#)
+	#assert_test(
+		#MapManager.node_states.size() == 20,
+		#"Generated 20 Nodes"
+	#)
+	#var node = MapManager.node_states[0]
+#
+	#var original = node.current_amount
+#
+	#MapManager.mine_node(node, 10)
+#
+	#assert_test(
+		#node.current_amount == original - 10,
+		#"Mining Reduces Node Amount"
+	#)
+	#assert_test(
+	#InventoryManager.get_amount("iron_ore") > 0,
+	#"Mining Adds Resources"
+	#)
+	#var save_data = MapManager.get_save_data()
+#
+	#MapManager.load_save_data(save_data)
+#
+	#assert_test(
+		#MapManager.node_states.size() == 20,
+		#"Node Save/Load Works"
+	#)
 
 func test_production_manager() -> void:
 	InventoryManager.clear_inventory()
@@ -356,3 +414,16 @@ func test_progression_manager() -> void:
 	ProgressionManager.load_save_data(save_data)
 
 	assert_test(ProgressionManager.is_recipe_unlocked("iron_ingot"),"Progression Save Load")
+
+# HELPERS
+func _get_node_snapshot(nodes: Array[NodeState]) -> Array:
+	var snapshot := []
+
+	for node in nodes:
+		snapshot.append({
+			"id": node.node_definition_id,
+			"position": node.position,
+			"amount": node.current_amount
+		})
+
+	return snapshot

@@ -6,4 +6,8 @@
 script = ExtResource("1_5a8vm")
 id = "copper_node"
 name = "Copper Node"
+spawn_weight = 5
+output = {
+"copper_ore": 1
+}
 metadata/_custom_type_script = "uid://v7rcslgo7hej"
