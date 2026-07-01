@@ -11,7 +11,7 @@ func save_game() -> bool:
 		"player": PlayerManager.get_save_data(),
 		"save_version": SAVE_VERSION,
 		"inventory": InventoryManager.get_save_data(),
-		"world": MapManager.get_save_data(),
+		"map": MapManager.get_save_data(),
 		"machines": MachineManager.get_save_data(),
 		"progression": ProgressionManager.get_save_data()
 	}
@@ -65,7 +65,7 @@ func load_game() -> bool:
 	var data = json.data
 
 	InventoryManager.load_save_data(data.get("inventory", {}))
-	MapManager.load_save_data(data.get("world", {}))
+	MapManager.load_save_data(data.get("map", {}))
 	MachineManager.load_save_data(data.get("machines", []))
 	ProgressionManager.load_save_data(data.get("progression", {}))
 	PlayerManager.load_save_data(data.get("player", {}))

@@ -31,34 +31,6 @@ func generate_world(seed_value: int = -1) -> void:
 # GENERATION
 # =====================================================
 
-func _generate_test_nodes(rng: RandomNumberGenerator) -> void:
-
-	var available_nodes := DataManager.nodes_by_id.keys()
-
-	if available_nodes.is_empty():
-		push_error("MapManager: No NodeDefinitions found.")
-		return
-
-	for i in range(20):
-		# this available_nodes.pick_random() should be replaced to use spawn_weight and ratio values from the node definitions, but for now this is fine for testing purposes
-		var node_id = available_nodes.pick_random()
-
-		var definition = DataManager.get_resource_node(node_id)
-
-		var node := NodeState.new()
-
-		node.node_definition_id = node_id
-		node.position = Vector2i(
-			rng.randi_range(0, 100),
-			rng.randi_range(0, 100)
-		)
-
-		node.current_amount = definition.capacity
-		node.discovered = false
-
-		node_states.append(node)
-
-	print("Generated nodes: ", node_states.size())
 #IMPORTANT FOR THE FUTURE: world generation settings should live in a resource/data definition, not inside MapManager.
 func _generate_nodes(rng: RandomNumberGenerator) -> void:
 	if DataManager.nodes_by_id.is_empty():
@@ -157,12 +129,6 @@ func discover_nodes_near_position(
 	for node in node_states:
 		
 		var distance = position.distance_to(node.position)
-		print(
-			"Node:",node.node_definition_id,
-			node.position,
-			" Distance:",
-			distance
-		)
 
 		if node.discovered:
 			continue

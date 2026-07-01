@@ -557,7 +557,7 @@ func test_player_manager() -> void:
 	)
 
 	assert_test(
-		PlayerManager.player_state.discovery_radius == 5,
+		PlayerManager.player_state.discovery_radius == 16,
 		"Player Discovery Radius Initialized"
 	)
 

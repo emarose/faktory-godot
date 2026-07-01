@@ -9,7 +9,7 @@ func initialize_player() -> void:
 
 	player_state.position = Vector2i.ZERO
 
-	player_state.discovery_radius = 5
+	player_state.discovery_radius = 16
 
 
 func set_position(
@@ -43,5 +43,5 @@ func load_save_data(data: Dictionary) -> void:
 
 	player_state.discovery_radius = data.get(
 		"discovery_radius",
-		5
+		16
 	)
