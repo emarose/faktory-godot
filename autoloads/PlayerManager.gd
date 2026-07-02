@@ -3,6 +3,27 @@ extends Node
 var player_state := PlayerState.new()
 
 
+func attempt_interact() -> void:
+	var node := MapManager.get_nearest_discovered_node(
+		get_position(),
+		player_state.interact_radius
+	)
+
+	if node == null:
+		print("No discovered node nearby.")
+		return
+
+	var mined := MapManager.mine_node(
+		node,
+		player_state.manual_mine_amount
+	)
+
+	if mined:
+		print("Mined node: ", node.node_definition_id)
+	else:
+		print("Could not mine node: ", node.node_definition_id)
+
+
 func initialize_player() -> void:
 
 	player_state = PlayerState.new()

@@ -1,7 +1,5 @@
 extends Node2D
 
-const TILE_SIZE := 16
-
 @onready var world_renderer: Node2D = $WorldRenderer
 @onready var player_marker: CharacterBody2D = $PlayerMarker
 
@@ -59,3 +57,4 @@ func _on_node_mined(node: NodeState, amount: int) -> void:
 		". Remaining: ",
 		node.current_amount
 	)
+	InventoryManager.print_inventory()

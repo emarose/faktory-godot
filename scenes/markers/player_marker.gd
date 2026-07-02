@@ -1,5 +1,5 @@
 extends CharacterBody2D
-# Tile size probably doesnt belong here, also attempt interact
+# Tile size probably doesnt belong here.
 const TILE_SIZE := 16
 
 func _ready() -> void:
@@ -20,7 +20,7 @@ func _physics_process(_delta: float) -> void:
 		PlayerManager.set_position(tile_position)
 	
 	if Input.is_action_just_pressed("interact"):
-		_attempt_interact()
+		PlayerManager.attempt_interact()
 
 func _tile_to_world(tile_position: Vector2i) -> Vector2:
 	return Vector2(
@@ -33,23 +33,3 @@ func _world_to_tile(world_position: Vector2) -> Vector2i:
 		roundi(world_position.x / TILE_SIZE),
 		roundi(world_position.y / TILE_SIZE)
 	)
-
-func _attempt_interact() -> void:
-	var node := MapManager.get_nearest_discovered_node(
-		PlayerManager.get_position(),
-		PlayerManager.player_state.interact_radius
-	)
-
-	if node == null:
-		print("No discovered node nearby.")
-		return
-
-	var mined := MapManager.mine_node(
-		node,
-		PlayerManager.player_state.manual_mine_amount
-	)
-
-	if mined:
-		print("Mined node: ", node.node_definition_id)
-	else:
-		print("Could not mine node: ", node.node_definition_id)

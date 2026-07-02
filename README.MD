@@ -323,7 +323,7 @@ Move near discovered node
 → inventory updates
 ```
 
-This gives the game its first real loop.
+This is done, with debug and logs from node mining interaction.
 
 ### 4. Add Basic UI
 
