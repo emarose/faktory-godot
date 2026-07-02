@@ -7,6 +7,7 @@ script = ExtResource("1_5a8vm")
 id = "copper_node"
 name = "Copper Node"
 spawn_weight = 16
+capacity = 10
 output = {
 "copper_ore": 1
 }

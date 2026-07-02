@@ -6,6 +6,7 @@ signal resource_added(item_id, amount)
 signal resource_removed(item_id, amount)
 signal node_discovered(node_id)
 signal node_depleted(node_id)
+signal node_mined(node_id, amount)
 # MACHINES
 signal machine_created(machine_id)
 signal machine_removed(machine_id)

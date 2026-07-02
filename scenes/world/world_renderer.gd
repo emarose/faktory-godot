@@ -16,10 +16,10 @@ func render_world() -> void:
 			node_state.position.y * TILE_SIZE
 		)
 
-		marker.set_node_type(
-			node_state.node_definition_id
-		)
+		marker.set_node_type(node_state.node_definition_id)
 
+		marker.set_depleted(node_state.current_amount <= 0)
+		
 		add_child(marker)
 
 	print("Rendered node markers: ", get_child_count())

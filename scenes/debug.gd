@@ -25,6 +25,8 @@ func _ready() -> void:
 	test_machine_manager()
 	test_progression_manager()
 	test_player_manager()
+	#INTERACTION
+	test_player_interaction_mining()
 
 	print("\n====================")
 	print("TESTS FINISHED")
@@ -602,7 +604,53 @@ func test_player_manager() -> void:
 	)
 
 	SaveManager.delete_save()
-	
+
+func test_player_interaction_mining() -> void:
+	print("\n--- PLAYER INTERACTION MINING ---")
+
+	MapManager.generate_world(12345)
+	InventoryManager.clear_inventory()
+
+	if MapManager.node_states.is_empty():
+		assert_test(false, "Interaction Mining Requires Generated Nodes")
+		return
+
+	var node = MapManager.node_states[0]
+
+	PlayerManager.set_position(node.position)
+
+	MapManager.discover_nodes_near_position(
+		PlayerManager.get_position(),
+		PlayerManager.player_state.discovery_radius
+	)
+
+	var nearby_node := MapManager.get_nearest_discovered_node(
+		PlayerManager.get_position(),
+		PlayerManager.player_state.interact_radius
+	)
+
+	assert_test(
+		nearby_node != null,
+		"Found Nearby Discovered Node"
+	)
+
+	var original_amount := nearby_node.current_amount
+
+	var mined := MapManager.mine_node(
+		nearby_node,
+		PlayerManager.player_state.manual_mine_amount
+	)
+
+	assert_test(
+		mined,
+		"Player Interaction Mines Node"
+	)
+
+	assert_test(
+		nearby_node.current_amount == original_amount - PlayerManager.player_state.manual_mine_amount,
+		"Player Interaction Reduces Node Amount"
+	)
+
 # HELPERS
 func _get_node_snapshot(nodes: Array[NodeState]) -> Array:
 	var snapshot := []

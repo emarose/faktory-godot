@@ -1,30 +1,26 @@
 extends CharacterBody2D
-
+# Tile size probably doesnt belong here, also attempt interact
 const TILE_SIZE := 16
 
 func _ready() -> void:
-	position = _tile_to_world(
-		PlayerManager.get_position()
-	)
-
+	position = _tile_to_world(PlayerManager.get_position())
 
 func _physics_process(_delta: float) -> void:
 	var direction := Input.get_vector(
-		"ui_left",
-		"ui_right",
-		"ui_up",
-		"ui_down"
-	)
+		"move_left",
+		"move_right",
+		"move_up",
+		"move_down")
 
 	velocity = direction * PlayerManager.player_state.movement_speed
-
 	move_and_slide()
 
 	var tile_position := _world_to_tile(position)
-
 	if tile_position != PlayerManager.get_position():
 		PlayerManager.set_position(tile_position)
-
+	
+	if Input.is_action_just_pressed("interact"):
+		_attempt_interact()
 
 func _tile_to_world(tile_position: Vector2i) -> Vector2:
 	return Vector2(
@@ -32,9 +28,28 @@ func _tile_to_world(tile_position: Vector2i) -> Vector2:
 		tile_position.y * TILE_SIZE
 	)
 
-
 func _world_to_tile(world_position: Vector2) -> Vector2i:
 	return Vector2i(
 		roundi(world_position.x / TILE_SIZE),
 		roundi(world_position.y / TILE_SIZE)
 	)
+
+func _attempt_interact() -> void:
+	var node := MapManager.get_nearest_discovered_node(
+		PlayerManager.get_position(),
+		PlayerManager.player_state.interact_radius
+	)
+
+	if node == null:
+		print("No discovered node nearby.")
+		return
+
+	var mined := MapManager.mine_node(
+		node,
+		PlayerManager.player_state.manual_mine_amount
+	)
+
+	if mined:
+		print("Mined node: ", node.node_definition_id)
+	else:
+		print("Could not mine node: ", node.node_definition_id)

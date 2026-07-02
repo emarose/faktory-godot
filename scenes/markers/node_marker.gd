@@ -12,3 +12,7 @@ func set_node_type(node_id: String) -> void:
 
 		_:
 			modulate = Color.WHITE
+			
+func set_depleted(is_depleted: bool) -> void:
+	if is_depleted:
+		modulate = Color.DARK_GRAY

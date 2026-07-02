@@ -101,6 +101,7 @@ func weighted_random_node(rng: RandomNumberGenerator) -> String:
 			return node_id
 
 	return ""
+
 # =====================================================
 # DISCOVERY
 # =====================================================
@@ -138,7 +139,6 @@ func discover_nodes_near_position(
 		
 		_discover_node_state(node)
 
-
 func get_discovered_nodes() -> Array[NodeState]:
 
 	var discovered_nodes: Array[NodeState] = []
@@ -150,7 +150,6 @@ func get_discovered_nodes() -> Array[NodeState]:
 
 	return discovered_nodes
 
-
 func get_undiscovered_nodes() -> Array[NodeState]:
 
 	var undiscovered_nodes: Array[NodeState] = []
@@ -161,7 +160,6 @@ func get_undiscovered_nodes() -> Array[NodeState]:
 			undiscovered_nodes.append(node)
 
 	return undiscovered_nodes
-
 
 func get_nodes_near_position(
 	position: Vector2i,
@@ -201,6 +199,31 @@ func _discover_node_state(
 			node.node_definition_id
 		)
 
+func get_nearest_discovered_node(
+	position: Vector2i,
+	radius: int
+) -> NodeState:
+
+	var nearest_node: NodeState = null
+	var nearest_distance := INF
+
+	for node in node_states:
+		if not node.discovered:
+			continue
+
+		if node.current_amount <= 0:
+			continue
+
+		var distance := position.distance_to(node.position)
+
+		if distance > radius:
+			continue
+
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest_node = node
+
+	return nearest_node
 # =====================================================
 # MINING
 # =====================================================
@@ -239,7 +262,12 @@ func mine_node(
 			item_id,
 			mined_amount * output_multiplier
 		)
-
+	if EventBus:
+		EventBus.emit_signal(
+			"node_mined",
+			node,
+			mined_amount
+		)
 	if node.current_amount <= 0:
 
 		if EventBus:
